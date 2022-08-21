@@ -2,6 +2,7 @@ package br.com.Pagamento.services;
 
 import br.com.Pagamento.entity.Pagamento;
 import br.com.Pagamento.entity.Pessoa;
+import br.com.pagamento.feignClients.PrefeituraFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,18 +14,13 @@ import java.util.Map;
 @Service
 public class PagamentoServices {
 
-    @Value("${prefeitura.host}")
-    private String prefeituraHost;
-
     @Autowired
-    private RestTemplate restTemplate;
+    private PrefeituraFeignClient prefeituraFeignClient;
 
     public Pagamento getPagamento(long PessoaId, int meses){
-        Map<String, String> uriVariables =  new HashMap<>();
-        uriVariables.put("id",""+PessoaId );
 
 
-        Pessoa pessoa= restTemplate.getForObject(prefeituraHost+"/pessoa/{id}", Pessoa.class, uriVariables);
+        Pessoa pessoa = prefeituraFeignClient.findById(PessoaId).getBody();
         return new Pagamento(pessoa.getName(), pessoa.getSalario(), meses);
     }
 }

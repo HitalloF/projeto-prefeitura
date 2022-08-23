@@ -28,6 +28,16 @@ public class PessoaService {
 
     public ResponseEntity<Pessoa> getById(Long id){
         Optional<Pessoa> Pessoa = this.pessoaRepository.findById(id);
+
+        /*
+        try {
+            Thread.sleep(3000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        */
+
+
         if(Pessoa.isPresent()) {
             return new ResponseEntity<Pessoa>(Pessoa.get(), HttpStatus.OK);
         }
